@@ -1,0 +1,6 @@
+[submodule "StrUtils"]
+	path = StrUtils
+	url = https://github.com/htiek/StrUtils
+[submodule "Utilities"]
+	path = Utilities
+	url = https://github.com/htiek/MiniData
