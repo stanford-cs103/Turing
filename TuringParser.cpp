@@ -22,6 +22,8 @@ namespace Turing {
       enum class Nonterminal {
         COMMAND,
     DIRECTION,
+    ERROR,
+    NONCOLON,
     STATEMENT,
     SYMBOL,
     _parserInternalStart,
@@ -147,6 +149,7 @@ namespace Turing {
   char32_t reduce_SYMBOL_from_CHAR(const std::string& _parserArg1);
   std::shared_ptr<Statement> reduce_COMMAND_from_ACCEPT(const std::string&);
   std::shared_ptr<Statement> reduce_COMMAND_from_GOTO_LABEL(const std::string&, const std::string& _parserArg2);
+  std::shared_ptr<Statement> reduce_COMMAND_from_LABEL_ERROR(const std::string& _parserArg1, _unused_);
   std::shared_ptr<Statement> reduce_COMMAND_from_MOVE_DIRECTION(const std::string&, Direction _parserArg2);
   std::shared_ptr<Statement> reduce_COMMAND_from_PRINT_SYMBOL(const std::string&, char32_t _parserArg2);
   std::shared_ptr<Statement> reduce_COMMAND_from_REJECT(const std::string&);
@@ -165,6 +168,12 @@ namespace Turing {
   AuxData reduce_COMMAND_from_GOTO_LABEL__thunk(StackData a0, StackData a1) {
     AuxData result;
     result.field0 = reduce_COMMAND_from_GOTO_LABEL(a0.token.data, a1.token.data);
+    return result;
+  }
+
+  AuxData reduce_COMMAND_from_LABEL_ERROR__thunk(StackData a0, StackData) {
+    AuxData result;
+    result.field0 = reduce_COMMAND_from_LABEL_ERROR(a0.token.data, {});
     return result;
   }
 
@@ -196,6 +205,62 @@ namespace Turing {
     AuxData result;
     result.field1 = reduce_DIRECTION_from_RIGHT(a0.token.data);
     return result;
+  }
+
+  AuxData reduce_ERROR_from_ERROR_NONCOLON__thunk(StackData, StackData) {
+    return {};
+  }
+
+  AuxData reduce_ERROR_from_NONCOLON__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_ACCEPT__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_BLANK__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_CHAR__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_GOTO__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_IF__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_LABEL__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_LEFT__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_MOVE__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_NOT__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_PRINT__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_REJECT__thunk(StackData) {
+    return {};
+  }
+
+  AuxData reduce_NONCOLON_from_RIGHT__thunk(StackData) {
+    return {};
   }
 
   AuxData reduce_STATEMENT_from_COMMAND__thunk(StackData a0) {
@@ -239,10 +304,10 @@ namespace Turing {
       /* Action table. */
       const vector<map<Symbol, Action*>> kActionTable = {
       {
-  {    TokenType::ACCEPT, new ShiftAction{18} },
-  {    Nonterminal::COMMAND, new ShiftAction{22} },
-  {    TokenType::GOTO, new ShiftAction{15} },
-  {    TokenType::IF, new ShiftAction{13} },
+  {    TokenType::ACCEPT, new ShiftAction{34} },
+  {    Nonterminal::COMMAND, new ShiftAction{38} },
+  {    TokenType::GOTO, new ShiftAction{31} },
+  {    TokenType::IF, new ShiftAction{28} },
   {    TokenType::LABEL, new ShiftAction{11} },
   {    TokenType::MOVE, new ShiftAction{7} },
   {    TokenType::PRINT, new ShiftAction{3} },
@@ -266,6 +331,7 @@ namespace Turing {
 {
   {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_CHAR__thunk) },
   {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_CHAR__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_CHAR__thunk) },
   {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_CHAR__thunk) },
   {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_CHAR__thunk) },
   {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_CHAR__thunk) },
@@ -274,6 +340,7 @@ namespace Turing {
 {
   {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_BLANK__thunk) },
   {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_BLANK__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_BLANK__thunk) },
   {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_BLANK__thunk) },
   {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_BLANK__thunk) },
   {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::SYMBOL, reduce_SYMBOL_from_BLANK__thunk) },
@@ -294,7 +361,247 @@ namespace Turing {
   {    TokenType::SCAN_EOF, new ReduceActionN<2>(Nonterminal::COMMAND, reduce_COMMAND_from_MOVE_DIRECTION__thunk) },
 },
 {
-  {    TokenType::COLON, new ShiftAction{12} },
+  {    TokenType::ACCEPT, new ShiftAction{26} },
+  {    TokenType::BLANK, new ShiftAction{25} },
+  {    TokenType::CHAR, new ShiftAction{24} },
+  {    TokenType::COLON, new ShiftAction{27} },
+  {    Nonterminal::ERROR, new ShiftAction{22} },
+  {    TokenType::GOTO, new ShiftAction{21} },
+  {    TokenType::IF, new ShiftAction{20} },
+  {    TokenType::LABEL, new ShiftAction{19} },
+  {    TokenType::LEFT, new ShiftAction{18} },
+  {    TokenType::MOVE, new ShiftAction{17} },
+  {    Nonterminal::NONCOLON, new ShiftAction{16} },
+  {    TokenType::NOT, new ShiftAction{15} },
+  {    TokenType::PRINT, new ShiftAction{14} },
+  {    TokenType::REJECT, new ShiftAction{13} },
+  {    TokenType::RIGHT, new ShiftAction{12} },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_RIGHT__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_REJECT__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_PRINT__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_NOT__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::ERROR, reduce_ERROR_from_NONCOLON__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_MOVE__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LEFT__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_LABEL__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_IF__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_GOTO__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ShiftAction{26} },
+  {    TokenType::BLANK, new ShiftAction{25} },
+  {    TokenType::CHAR, new ShiftAction{24} },
+  {    TokenType::GOTO, new ShiftAction{21} },
+  {    TokenType::IF, new ShiftAction{20} },
+  {    TokenType::LABEL, new ShiftAction{19} },
+  {    TokenType::LEFT, new ShiftAction{18} },
+  {    TokenType::MOVE, new ShiftAction{17} },
+  {    Nonterminal::NONCOLON, new ShiftAction{23} },
+  {    TokenType::NOT, new ShiftAction{15} },
+  {    TokenType::PRINT, new ShiftAction{14} },
+  {    TokenType::REJECT, new ShiftAction{13} },
+  {    TokenType::RIGHT, new ShiftAction{12} },
+  {    TokenType::SCAN_EOF, new ReduceActionN<2>(Nonterminal::COMMAND, reduce_COMMAND_from_LABEL_ERROR__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::IF, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::NOT, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<2>(Nonterminal::ERROR, reduce_ERROR_from_ERROR_NONCOLON__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_CHAR__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_BLANK__thunk) },
+},
+{
+  {    TokenType::ACCEPT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::BLANK, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::CHAR, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::GOTO, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::IF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::LABEL, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::LEFT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::MOVE, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::NOT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::PRINT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::REJECT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::RIGHT, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
+  {    TokenType::SCAN_EOF, new ReduceActionN<1>(Nonterminal::NONCOLON, reduce_NONCOLON_from_ACCEPT__thunk) },
 },
 {
   {    TokenType::SCAN_EOF, new ReduceActionN<2>(Nonterminal::STATEMENT, reduce_STATEMENT_from_LABEL_COLON__thunk) },
@@ -302,19 +609,36 @@ namespace Turing {
 {
   {    TokenType::BLANK, new ShiftAction{6} },
   {    TokenType::CHAR, new ShiftAction{5} },
-  {    TokenType::NOT, new ShiftAction{19} },
-  {    Nonterminal::SYMBOL, new ShiftAction{14} },
+  {    TokenType::NOT, new ShiftAction{35} },
+  {    Nonterminal::SYMBOL, new ShiftAction{29} },
 },
 {
-  {    TokenType::ACCEPT, new ShiftAction{18} },
-  {    Nonterminal::COMMAND, new ShiftAction{17} },
-  {    TokenType::GOTO, new ShiftAction{15} },
+  {    TokenType::ACCEPT, new ShiftAction{34} },
+  {    Nonterminal::COMMAND, new ShiftAction{33} },
+  {    TokenType::GOTO, new ShiftAction{31} },
+  {    TokenType::LABEL, new ShiftAction{30} },
   {    TokenType::MOVE, new ShiftAction{7} },
   {    TokenType::PRINT, new ShiftAction{3} },
   {    TokenType::REJECT, new ShiftAction{2} },
 },
 {
-  {    TokenType::LABEL, new ShiftAction{16} },
+  {    TokenType::ACCEPT, new ShiftAction{26} },
+  {    TokenType::BLANK, new ShiftAction{25} },
+  {    TokenType::CHAR, new ShiftAction{24} },
+  {    Nonterminal::ERROR, new ShiftAction{22} },
+  {    TokenType::GOTO, new ShiftAction{21} },
+  {    TokenType::IF, new ShiftAction{20} },
+  {    TokenType::LABEL, new ShiftAction{19} },
+  {    TokenType::LEFT, new ShiftAction{18} },
+  {    TokenType::MOVE, new ShiftAction{17} },
+  {    Nonterminal::NONCOLON, new ShiftAction{16} },
+  {    TokenType::NOT, new ShiftAction{15} },
+  {    TokenType::PRINT, new ShiftAction{14} },
+  {    TokenType::REJECT, new ShiftAction{13} },
+  {    TokenType::RIGHT, new ShiftAction{12} },
+},
+{
+  {    TokenType::LABEL, new ShiftAction{32} },
 },
 {
   {    TokenType::SCAN_EOF, new ReduceActionN<2>(Nonterminal::COMMAND, reduce_COMMAND_from_GOTO_LABEL__thunk) },
@@ -328,12 +652,13 @@ namespace Turing {
 {
   {    TokenType::BLANK, new ShiftAction{6} },
   {    TokenType::CHAR, new ShiftAction{5} },
-  {    Nonterminal::SYMBOL, new ShiftAction{20} },
+  {    Nonterminal::SYMBOL, new ShiftAction{36} },
 },
 {
-  {    TokenType::ACCEPT, new ShiftAction{18} },
-  {    Nonterminal::COMMAND, new ShiftAction{21} },
-  {    TokenType::GOTO, new ShiftAction{15} },
+  {    TokenType::ACCEPT, new ShiftAction{34} },
+  {    Nonterminal::COMMAND, new ShiftAction{37} },
+  {    TokenType::GOTO, new ShiftAction{31} },
+  {    TokenType::LABEL, new ShiftAction{30} },
   {    TokenType::MOVE, new ShiftAction{7} },
   {    TokenType::PRINT, new ShiftAction{3} },
   {    TokenType::REJECT, new ShiftAction{2} },
@@ -462,6 +787,12 @@ namespace Turing {
   std::shared_ptr<Statement> reduce_COMMAND_from_GOTO_LABEL(const std::string&, const std::string& _parserArg2) {
     std::shared_ptr<Statement> _parserArg0;
     _parserArg0 = make_shared<Goto>(_parserArg2);
+    return _parserArg0;
+  }
+
+  std::shared_ptr<Statement> reduce_COMMAND_from_LABEL_ERROR(const std::string& _parserArg1, _unused_) {
+    std::shared_ptr<Statement> _parserArg0;
+    throw runtime_error("Unknown command: " + _parserArg1);
     return _parserArg0;
   }
 

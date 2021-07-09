@@ -12,7 +12,7 @@ namespace Turing {
             { "Left",         TokenType::LEFT   },
             { "Right",        TokenType::RIGHT  },
             { "Goto",         TokenType::GOTO   },
-            { "Print",        TokenType::PRINT  },
+            { "Write",        TokenType::PRINT  },
             { "Blank",        TokenType::BLANK  },
             { "Accept",       TokenType::ACCEPT },
             { "Reject",       TokenType::REJECT },
