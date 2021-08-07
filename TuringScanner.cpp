@@ -14,8 +14,9 @@ namespace Turing {
             { "Goto",         TokenType::GOTO   },
             { "Write",        TokenType::PRINT  },
             { "Blank",        TokenType::BLANK  },
-            { "Accept",       TokenType::ACCEPT },
-            { "Reject",       TokenType::REJECT },
+            { "True",         TokenType::TRUE   },
+            { "False",        TokenType::FALSE  },
+            { "Return",       TokenType::RETURN },
             { "If",           TokenType::IF     },
             { "Not",          TokenType::NOT    },
             { ":",            TokenType::COLON  },
@@ -36,6 +37,11 @@ namespace Turing {
         bool isSpace(char32_t ch) {
             return isASCII(ch) && isspace(static_cast<int>(ch));
         }
+        bool isQuote(char32_t ch) {
+            return ch == '\'' ||
+                   ch == fromUTF8("‘") ||
+                   ch == fromUTF8("’");
+        }
 
         /* Given a character, could it start an identifier?
          *
@@ -47,9 +53,9 @@ namespace Turing {
 
         /* Scans a character. We should see '[ch]'. */
         void scanCharacter(queue<Token>& result, istream& input) {
-            if (readChar(input) != '\'') throw runtime_error("Expected a single quote.");
+            if (!isQuote(readChar(input))) throw runtime_error("Expected a single quote.");
             char32_t payload = readChar(input);
-            if (readChar(input) != '\'') throw runtime_error("Expected a single quote.");
+            if (!isQuote(readChar(input))) throw runtime_error("Expected a single quote.");
 
             result.push({ TokenType::CHAR, toUTF8(payload) });
         }
@@ -149,7 +155,7 @@ namespace Turing {
                 (void) readChar(input);
             }
             /* See quotes? That means it's a character name. */
-            else if (next == '\'') {
+            else if (isQuote(next)) {
                 scanCharacter(result, input);
             }
             /* See something alphanumeric? It might be a label, or it might be

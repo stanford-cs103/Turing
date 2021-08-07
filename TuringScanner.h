@@ -16,8 +16,9 @@ namespace Turing {
         CHAR      = 'a',
         COLON     = ':',
         LABEL     = 'L',
-        ACCEPT    = 'Y',
-        REJECT    = 'N',
+        TRUE      = 'Y',
+        FALSE     = 'N',
+        RETURN    = 'r',
         IF        = '?',
         NOT       = '!',
         SCAN_EOF  = '$'
