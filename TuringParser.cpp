@@ -859,13 +859,13 @@ namespace Turing {
 
   std::shared_ptr<Statement> reduce_COMMAND_from_PRINT_SYMBOL(const std::string&, char32_t _parserArg2) {
     std::shared_ptr<Statement> _parserArg0;
-    _parserArg0 = make_shared<Print>(_parserArg2);
+    _parserArg0 = make_shared<Write>(_parserArg2);
     return _parserArg0;
   }
 
   std::shared_ptr<Statement> reduce_COMMAND_from_RETURN_BOOLEAN(const std::string&, bool _parserArg2) {
     std::shared_ptr<Statement> _parserArg0;
-    _parserArg0 = make_shared<Halt>(_parserArg2);
+    _parserArg0 = make_shared<Return>(_parserArg2);
     return _parserArg0;
   }
 

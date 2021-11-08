@@ -16,13 +16,13 @@ namespace Turing {
     void Label::accept(Visitor& v) {
         v.visit(*this);
     }
-    void Print::accept(Visitor& v) {
+    void Write::accept(Visitor& v) {
         v.visit(*this);
     }
     void Move::accept(Visitor& v) {
         v.visit(*this);
     }
-    void Halt::accept(Visitor& v) {
+    void Return::accept(Visitor& v) {
         v.visit(*this);
     }
     void Goto::accept(Visitor& v) {
@@ -57,13 +57,13 @@ namespace Turing {
                 string handle(Move& m) override {
                     return "Move " + toString(m.direction());
                 }
-                string handle(Halt& h) override {
+                string handle(Return& h) override {
                     return h.isAccepting()? "Accept" : "Reject";
                 }
                 string handle(Goto& g) override {
                     return "Goto " + g.label();
                 }
-                string handle(Print& p) override {
+                string handle(Write& p) override {
                     return "Print " + toString(p.ch());
                 }
                 string handle(If& i, const string& expr) override {
@@ -321,7 +321,7 @@ namespace Turing {
         StatementExecutor(Interpreter& me, Result& result) : me_(me), result_(result) {}
 
         /* Print writes a character. */
-        void visit(Print& p) override {
+        void visit(Write& p) override {
             me_.tape_[me_.tapePos_] = p.ch();
         }
 
@@ -353,7 +353,7 @@ namespace Turing {
         }
 
         /* Halt stops the program. */
-        void visit(Halt& h) override {
+        void visit(Return& h) override {
             result_ = h.isAccepting()? Result::ACCEPT : Result::REJECT;
         }
 

@@ -212,9 +212,9 @@ namespace Turing {
         Direction direction_;
     };
 
-    class Print: public Statement {
+    class Write: public Statement {
     public:
-        Print(char32_t ch) : ch_(ch) {};
+        Write(char32_t ch) : ch_(ch) {};
 
         char32_t ch() const {
             return ch_;
@@ -240,9 +240,9 @@ namespace Turing {
         std::string label_;
     };
 
-    class Halt: public Statement {
+    class Return: public Statement {
     public:
-        Halt(bool isAccept) : isAccept_(isAccept) {}
+        Return(bool isAccept) : isAccept_(isAccept) {}
 
         virtual void accept(Visitor& v) override;
 
@@ -285,8 +285,8 @@ namespace Turing {
 
         virtual void visit(Label&) {}
         virtual void visit(Move&) {}
-        virtual void visit(Print&) {}
-        virtual void visit(Halt&) {}
+        virtual void visit(Write&) {}
+        virtual void visit(Return&) {}
         virtual void visit(If&) {}
         virtual void visit(Goto&) {}
     };
@@ -300,8 +300,8 @@ namespace Turing {
 
         virtual T handle(Label&) { return T(); }
         virtual T handle(Move&) { return T(); }
-        virtual T handle(Print&) { return T(); }
-        virtual T handle(Halt&) { return T(); }
+        virtual T handle(Write&) { return T(); }
+        virtual T handle(Return&) { return T(); }
         virtual T handle(If&, const T&) { return T(); }
         virtual T handle(Goto&) { return T(); }
 
@@ -313,10 +313,10 @@ namespace Turing {
         virtual void visit(Move& m) override final {
             result_ = handle(m);
         }
-        virtual void visit(Print& p) override final {
+        virtual void visit(Write& p) override final {
             result_ = handle(p);
         }
-        virtual void visit(Halt& h) override final {
+        virtual void visit(Return& h) override final {
             result_ = handle(h);
         }
         virtual void visit(If& i) override final {
