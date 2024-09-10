@@ -32,49 +32,6 @@ namespace Turing {
         v.visit(*this);
     }
 
-    /* Pretty-printers. */
-    namespace {
-        /* Character -> String, in a pretty-printy way. */
-        std::string toString(char32_t ch) {
-            if (ch == Turing::kBlankSymbol) return "Blank";
-
-            return "'" + toUTF8(ch) + "'";
-        }
-
-        /* Direction -> String */
-        std::string toString(Direction d) {
-            if (d == Direction::LEFT) return "Left";
-            if (d == Direction::RIGHT) return "Right";
-            return "<unknown direction>";
-        }
-
-        /* Expression -> String, in a pretty-printy way. */
-        std::string toString(std::shared_ptr<Statement> stmt) {
-            class Printer: public Calculator<string> {
-                string handle(Label& l) override {
-                    return l.label() + ":";
-                }
-                string handle(Move& m) override {
-                    return "Move " + toString(m.direction());
-                }
-                string handle(Return& h) override {
-                    return h.isAccepting()? "Accept" : "Reject";
-                }
-                string handle(Goto& g) override {
-                    return "Goto " + g.label();
-                }
-                string handle(Write& p) override {
-                    return "Print " + toString(p.ch());
-                }
-                string handle(If& i, const string& expr) override {
-                    return string("If ") + (i.isNegated()? "Not " : "") + toString(i.ch()) + " " + expr;
-                }
-            };
-
-            return Printer().calculate(*stmt);
-        }
-    }
-
     /* Parsing. */
 
     Program::Program(istream& in) {
