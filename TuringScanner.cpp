@@ -55,6 +55,19 @@ namespace Turing {
         void scanCharacter(queue<Token>& result, istream& input) {
             if (!isQuote(readChar(input))) throw runtime_error("Expected a single quote.");
             char32_t payload = readChar(input);
+
+            /* This could be the start of an escape sequence (\n, \t, \\, \').
+             * If so, we need to read the rest of it.
+             */
+            if (payload == '\\') {
+                char32_t next = readChar(input);
+                if (next == 'n')       payload = '\n';
+                else if (next == 't')  payload = '\t';
+                else if (next == '\\') payload = '\\';
+                else if (next == '\'') payload = '\'';
+                else throw runtime_error("Illegal escape sequence; expected \\\\, \\n, \\t, or \\\'");
+            }
+
             if (!isQuote(readChar(input))) throw runtime_error("Expected a single quote.");
 
             result.push({ TokenType::CHAR, toUTF8(payload) });
