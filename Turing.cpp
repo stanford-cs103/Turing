@@ -44,9 +44,26 @@ namespace Turing {
     }
 
     namespace {
-        /* Removes comments and leading/trailing whitespace. */
+        /* Removes comments and leading/trailing whitespace.
+         * Comments begin with the # character. We have to be
+         * careful when implementing this to make sure that we
+         * don't treat the quoted string '#' as a comment.
+         */
         void cleanLine(string& line) {
+            /* Search for a comment. This will find the first # mark. It might be
+             * in quotes, in which case we should ignore it
+             * and search again.
+             */
             size_t comment = line.find('#');
+            if (comment != string::npos &&
+                comment != 0 && comment + 1 != line.size() &&
+                line[comment - 1] == '\'' &&
+                line[comment + 1] == '\'') {
+                /* Look for the next one. */
+                comment = line.find(comment + 1);
+            }
+
+            /* Now if we have a hash mark, it's definitely a comment. */
             if (comment != string::npos) {
                 line.erase(comment);
             }
