@@ -109,6 +109,11 @@ namespace Turing {
          * taken from there.
          */
         int64_t tapeHeadPos() const;
+        
+        /* Returns the range of positions on the tape that have been touched
+         * by the TM.
+         */
+        std::pair<int64_t, int64_t> usedTapeRange() const;
 
         /* Returns the tape character at the indicated position, which may
          * be the blank symbol if it's out of range.

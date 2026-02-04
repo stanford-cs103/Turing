@@ -143,40 +143,6 @@ namespace Turing {
                 jumpTargets.insert(label);
             }
         }
-
-        /* TODO: Do we want to validate whether all labels are jumped to? */
-        #if 0
-            /* Make sure all labels are a jump target, except possibly Start. */
-            for (const auto& entry: labels_) {
-                string label = entry.first;
-                if (label != kStartLabel && !jumpTargets.count(label)) {
-                    /* If there's no error here, add one. */
-                    if (!errors_.count(entry.second)) {
-                        errors_[entry.second] = "No Goto statement jumps to this label.";
-                    }
-                }
-            }
-        #endif
-
-        /* TODO: Do you want to require the last line of each program to either be
-         * Accept, Reject, or Goto?
-         */
-        #if 0
-            /* Confirm that the last line is either an Accept, a Reject, or a Goto. */
-            if (!statements_.empty()) {
-                /* Last statement. */
-                auto last     = statements_.rbegin();
-                auto lastStmt = last->second;
-
-                if (dynamic_pointer_cast<Halt>(lastStmt) == nullptr &&
-                    dynamic_pointer_cast<Goto>(lastStmt) == nullptr) {
-                    /* If there wasn't already an error here, report one. */
-                    if (!errors_.count(last->first)) {
-                        errors_[last->first] = "The last statement in a Turing program must be either Accept, Reject, or Goto.";
-                    }
-                }
-            }
-        #endif
     }
 
     /* The program is valid if there are no errors. */
@@ -230,6 +196,11 @@ namespace Turing {
     /* Change from deque coordinates to world coordinates. */
     int64_t Interpreter::tapeHeadPos() const {
         return int64_t(tapePos_) + dequeBase_;
+    }
+    
+    /* Change from deque coordinates to world coordinates. */
+    pair<int64_t, int64_t> Interpreter::usedTapeRange() const {
+        return make_pair(dequeBase_, dequeBase_ + int64_t(tape_.size()));
     }
 
     /* Jump to the given label. */
