@@ -62,6 +62,12 @@ namespace Turing {
         /* Underlying program accessors. */
         size_t numLines() const;
         std::string line(size_t lineNo) const;
+        
+        /* Statement at the given line, or nullptr if none exists. */
+        std::shared_ptr<Statement> statement(size_t lineNo) const;
+        
+        /* What line is a label at? Returns -1 if the label doesn't exist. */
+        size_t lineForLabel(const std::string& label) const;
 
         /* Whether the program has any errors. */
         bool isValid() const;

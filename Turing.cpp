@@ -164,6 +164,16 @@ namespace Turing {
     string Program::line(size_t i) const {
         return rawLines_.at(i);
     }
+    
+    shared_ptr<Statement> Program::statement(size_t i) const {
+        auto itr = statements_.find(i);
+        return itr != statements_.end()? itr->second : nullptr;
+    }
+    
+    size_t Program::lineForLabel(const string& label) const {
+        auto itr = labels_.find(label);
+        return itr != labels_.end()? itr->second : -1;
+    }
 
     /* Interpreter setup. We need to do the following:
      *
